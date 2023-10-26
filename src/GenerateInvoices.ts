@@ -1,11 +1,14 @@
 import moment from "moment";
 import pgp from "pg-promise";
+import ContractRepository from "./aplication/repository/ContractRepository";
 
 export default class GenerateInvoices {
 
+    constructor(readonly contractRepository: ContractRepository) {}
+
     async execute(input: Input): Promise<Output[]> {
         const connection = pgp()("postgres://postgres:postgres@db:5432/app")
-        const contracts = await connection.query("select * from branas.contract", [])
+        const contracts = await this.contractRepository.list()
         const output: Output[] = []
         for (const contract of contracts) {
             const payments = await connection.query("select * from branas.payment where id_contract = $1",
