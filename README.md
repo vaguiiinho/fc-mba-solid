@@ -1,6 +1,7 @@
 # fc-mba-solid
 
 #init containers
+
 docker compose up -d
 
 #init database
