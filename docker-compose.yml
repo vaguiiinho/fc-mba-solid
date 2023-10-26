@@ -1,0 +1,31 @@
+version: '3.1'
+
+services:
+
+  app:
+    container_name: app
+    image: node
+    volumes:
+      - ./:/app
+    entrypoint: tail -f /dev/null
+    working_dir: /app
+
+  db:
+    container_name: db
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+  
+    volumes:
+      - ./dbdata/:/var/lib/postgresql/data
+      - ./sql/:/docker-entrypoint-initdb.d 
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
