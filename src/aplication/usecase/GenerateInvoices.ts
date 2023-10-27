@@ -1,6 +1,6 @@
 import moment from "moment";
 import pgp from "pg-promise";
-import ContractRepository from "./aplication/repository/ContractRepository";
+import ContractRepository from "../repository/ContractRepository";
 
 export default class GenerateInvoices {
 
@@ -8,11 +8,11 @@ export default class GenerateInvoices {
 
     async execute(input: Input): Promise<Output[]> {
         const connection = pgp()("postgres://postgres:postgres@db:5432/app")
-        const contracts = await this.contractRepository.list()
         const output: Output[] = []
+        const contracts = await this.contractRepository.list()
         for (const contract of contracts) {
             const payments = await connection.query("select * from branas.payment where id_contract = $1",
-                [contract.id_contract])
+            [contract.id_contract])
             if (input.type === "cash") {
                 for (const payment of payments) {
                     if (payment.date.getMonth() + 1 !== input.month || payment.date.getFullYear() !==
