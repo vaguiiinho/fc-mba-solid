@@ -8,12 +8,6 @@ import ContractDatabaseRepository from "../src/infra/repository/ContractDatabase
 import JsonPresenter from "../src/infra/presenter/JsonPresenter";
 
 test("Deve gerar as faturas pela api", async function () {
-    const httpServer = new ExpressAdapter();
-    const connection = new PgPromiseAdapter();
-    const contractRepository = new ContractDatabaseRepository(connection);
-    const generateInvoices = new LoggerDecorator(new GenerateInvoices(contractRepository, new JsonPresenter()));
-    new MainController(httpServer, generateInvoices);
-    httpServer.listen(3000);
     const input = {
         month: 1,
         year: 2022,
