@@ -3,12 +3,14 @@ import ContractRepository from "../repository/ContractRepository";
 import Usecase from "./Usecase";
 import Presenter from "../presenter/Presenter";
 import JsonPresenter from "../../infra/presenter/JsonPresenter";
+import Mediator from "../../infra/mediator/Mediator";
 
 export default class GenerateInvoices implements Usecase {
 
     constructor(
         readonly contractRepository: ContractRepository,
         readonly presenter: Presenter = new JsonPresenter(),
+        readonly mediator: Mediator = new Mediator()
         ) { }
 
     async execute(input: Input): Promise<Output[]> {
@@ -20,6 +22,7 @@ export default class GenerateInvoices implements Usecase {
                 output.push({ date: invoice.date, amount: invoice.amount });
             }
         }
+        await this.mediator.publish("InvoicesGenerated", output);
         return this.presenter.present(output);
     }
 }
